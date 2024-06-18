@@ -1,0 +1,182 @@
+﻿@using Iris.DAL;
+@using Iris.Models;
+
+
+@{
+    ViewBag.Title = "Επιτροπές σύσταση";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+
+    .k-grid {
+        font-size: 12px;
+    }
+
+</style>
+
+    @Html.AntiForgeryToken()
+    <div class="page-header" style="margin:5px 30px 5px 30px">
+        <span style="margin:5px 10px 5px 10px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+            <font style="color:#494949;font-family:'Segoe UI'">Αποφάσεις σύστασης πρωτοβάθμιων και δευτεροβάθμιων επιτροπών</font>
+        </span>
+        <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+        <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+    </div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px">
+
+        @(Html.Kendo().Grid<SysPeriferiakiViewModel>()
+        .Name("Grid1")
+        .Columns(columns =>
+        {
+            columns.Bound(m => m.ΕΠΩΝΥΜΙΑ_ΠΕΡΙΦΕΡΕΙΑ).Width(60);
+        })
+        .HtmlAttributes(new { style = "font-size:13px" })
+        .Filterable()
+        .Selectable()
+        .Resizable(resize => resize.Columns(true))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Scrollable(scr => scr.Height(200))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+        .DataSource(datasource => datasource
+        .Ajax()
+        .PageSize(20)
+        .ServerOperation(false)
+        .Model(model =>
+        {
+            model.Id(p => p.ΚΩΔΙΚΟΣ_ΠΕΡΙΦΕΡΕΙΑ);
+        })
+        .Read(read => read.Action("Periferiaki_Read", "Tools"))
+        ) @* datasource*@
+        .Events(e => e.Change("change"))
+        )
+    </div>
+
+<div class="body-content" style="margin:10px 30px 5px 30px;font-size:14px;background-color:dimgray;padding:4px 4px 4px 4px">
+    <label style="font-size:14px;font-weight:bold;color:white">Σχολικό έτος : </label>
+    @(Html.Kendo().DropDownList()
+            .Name("ddlSchoolYear")
+            .DataTextField("ΣΧΟΛΙΚΟ_ΕΤΟΣ")
+            .DataValueField("SCHOOLYEAR_ID")
+            .HtmlAttributes(new { style = "width:230px;font-size:14px;font-weight:bold" })
+            .OptionLabel("Επιλογή...")
+            .AutoBind(true)
+            .Enable(true)
+            .DataSource(source => { source.Read(read => { read.Action("GetSchoolYears", "Tools"); }).ServerFiltering(true); })
+            .Events(e =>
+            {
+                e.Select("ddlselect");
+            })
+    )
+</div>
+
+<div class="body-content" style="margin:10px 30px 5px 30px">
+
+    @(Html.Kendo().Grid<SysEpitropesViewModel>()
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(m => m.ΠΡΩΤΟΒΑΘΜΙΑ).Width(50);
+            columns.Bound(m => m.ΔΕΥΤΕΡΟΒΑΘΜΙΑ).Width(50);
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(34);
+        })
+        .ToolBar(toolBar =>
+        {
+            toolBar.Create();
+        })
+        .HtmlAttributes(new { style = "font-size:13px" })
+        .Filterable()
+        .Editable(editable => editable.Mode(GridEditMode.InLine).CreateAt(GridInsertRowPosition.Top))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Scrollable(scr => scr.Height(160))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+        .DataSource(datasource => datasource
+            .Ajax()
+            .PageSize(20)
+            .ServerOperation(false)
+            .Model(model =>
+            {
+                model.Id(p => p.ΕΠΙΤΡΟΠΗ_ΚΩΔ);
+            })
+            .Create(create => create.Action("ApofasiEpitropes_Create", "Tools").Data("data"))
+            .Read(read => read.Action("ApofasiEpitropes_Read", "Tools").Data("data"))
+            .Update(update => update.Action("ApofasiEpitropes_Update", "Tools").Data("data"))
+            .Destroy("ApofasiEpitropes_Destroy", "Tools")
+            .Events(events => events.Error("error_handler"))
+        ) @* datasource*@
+    )
+
+</div>
+
+
+<script type="text/javascript">
+
+    function ddlselect(e) {
+        var dataItem = this.dataItem(e.item.index());
+        var grid1 = $("#Grid1").data("kendoGrid");
+        var dataRow = grid1.dataItem(grid1.select());
+
+        if (dataItem && dataRow) {
+            var syearID = dataItem.SCHOOLYEAR_ID;
+            var periferiakiID = dataRow.ΚΩΔΙΚΟΣ_ΠΕΡΙΦΕΡΕΙΑ;
+            $("#Grid").data("kendoGrid").dataSource.read({ schoolyearId: syearID, periferiakiId: periferiakiID });
+            $("#Grid").css("display", "block");
+        }
+        else {
+            $("#Grid").data("kendoGrid").dataSource.read({ schoolyearId: 0, periferiakiId: 0 });
+            $("#Grid").css("display", "block");
+        }
+    };
+
+    function change(e) {
+        var syearpicker = $("#ddlSchoolYear").data("kendoDropDownList");
+        var syearID = syearpicker.value();
+
+        var dataItem = this.dataItem(this.select());
+        var periferiakiID = dataItem.ΚΩΔΙΚΟΣ_ΠΕΡΙΦΕΡΕΙΑ;
+
+        if (syearID) {
+            $("#Grid").data("kendoGrid").dataSource.read({ schoolyearId: syearID, periferiakiId: periferiakiID });
+            $("#Grid").css("display", "block");
+        }
+        else {
+            $("#Grid").data("kendoGrid").dataSource.read({ schoolyearId: 0, periferiakiId: 0 });
+            $("#Grid").css("display", "block");
+        }
+    }
+
+    function data() {
+        var masterGrid = $("#Grid1").data("kendoGrid");
+        var syearID = $("#ddlSchoolYear").data("kendoDropDownList").value();
+
+        // get data item for selected row
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+
+        if (dataItem && syearID) {
+            var periferiakiID = dataItem.ΚΩΔΙΚΟΣ_ΠΕΡΙΦΕΡΕΙΑ;
+            return {
+                schoolyearId: syearID,
+                periferiakiId: periferiakiID
+            }
+        }
+        else {
+            return {
+                schoolyearId: 0,
+                periferiakiId: 0
+            }
+        }
+    }
+
+    function RefreshGrid(e) {
+        var grid = $("#Grid").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+</script>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="61e873eccbd44b73b0c77ee3ca6c68bb" Name="Diagram1" ZoomLevel="73">
+        <EntityTypeShape EntityType="IrisDBModel.Δ_ΑΝΤΙΠΡΟΕΔΡΟΙ" Width="1.875" PointX="23.375" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ_ΔΙΑΧΕΙΡΙΣΤΕΣ" Width="1.5" PointX="18.5" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ_ΔΙΕΥΘΥΝΤΕΣ" Width="1.5" PointX="16.75" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ_ΔΙΕΥΘΥΝΤΕΣ_ΓΕΝΙΚΟΙ" Width="2.125" PointX="20.125" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ_ΔΙΟΙΚΗΤΕΣ" Width="1.5" PointX="23.625" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ_ΠΡΟΙΣΤΑΜΕΝΟΙ" Width="2" PointX="22.625" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΜΒΑΣΗ" Width="1.5" PointX="18.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΕΓΓΡΑΦΟ_ΕΙΔΟΣ" Width="1.875" PointX="14.5" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΕΚΠΑΙΔΕΥΤΙΚΕΣ_ΔΟΜΕΣ" Width="2.5" PointX="22.5" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΠΑΡΑΜΕΤΡΟΙ_ΑΠΟΦΑΣΕΙΣ" Width="2.375" PointX="22.625" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΠΕΡΙΦΕΡΕΙΑΚΕΣ" Width="1.875" PointX="25.625" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΠΡΟΚΗΡΥΞΗ_ΑΠΟΦΑΣΗ" Width="2.375" PointX="22.625" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΣΧΟΛΙΚΑ_ΕΤΗ" Width="1.875" PointX="16.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΦΥΛΑ" Width="1.5" PointX="20.5" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΩΡΟΜΙΣΘΙΑ" Width="1.875" PointX="27.5" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="IrisDBModel.USER_ADMINS" Width="1.5" PointX="27.5" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.USER_SCHOOLS" Width="1.5" PointX="25.75" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.sqlUSER_SCHOOL" Width="2" PointX="27.5" PointY="5" />
+        <EntityTypeShape EntityType="IrisDBModel.SYS_DIMOS" Width="1.5" PointX="30.5" PointY="9.125" />
+        <EntityTypeShape EntityType="IrisDBModel.SYS_PERIFERIES" Width="1.5" PointX="28.25" PointY="9.125" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΣΧΟΛΕΣ" Width="1.5" PointX="25.875" PointY="10.375" />
+        <AssociationConnector Association="IrisDBModel.FK_SYS_DIMOS_SYS_PERIFERIES" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΚΛΑΔΟΙ" Width="1.875" PointX="20" PointY="23.75" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΕΠΙΤΡΟΠΕΣ_ΑΒ" Width="1.875" PointX="25.25" PointY="5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΑΚΥΡΩΤΙΚΕΣ" Width="2.25" PointX="0.625" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΑΚΥΡΩΤΙΚΕΣ_ΑΝ" Width="2.75" PointX="6.625" PointY="5.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΑΝΑΚΛΗΣΗΣ" Width="2.5" PointX="17" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΑΝΑΚΛΗΣΗΣ_ΑΝ" Width="2.75" PointX="0.625" PointY="5.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΑΠΕΥΘΕΙΑΣ" Width="2.375" PointX="5.5" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΑΡΧΙΚΕΣ" Width="2.125" PointX="3.125" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΑΡΧΙΚΕΣ_ΑΝ" Width="2.5" PointX="3.75" PointY="5.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΣΥΜΠΛΗΡΩΜΑΤΙΚΕΣ" Width="2.75" PointX="11" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΣΥΜΠΛΗΡΩΜΑΤΙΚΕΣ_ΑΚ" Width="2.75" PointX="14" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΣΥΜΠΛΗΡΩΜΑΤΙΚΕΣ_ΑΝ" Width="2.875" PointX="9.875" PointY="5.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ" Width="2.75" PointX="19.75" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ_ΑΚ" Width="2.625" PointX="8.125" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΑΚΥΡΩΤΙΚΕΣ" Width="2.25" PointX="0.625" PointY="10.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΑΚΥΡΩΤΙΚΕΣ_ΑΝ" Width="2.25" PointX="3.125" PointY="10.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΑΝΑΚΛΗΣΗΣ" Width="2.25" PointX="12.5" PointY="10.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΑΝΑΚΛΗΣΗΣ_ΑΝ" Width="2.75" PointX="0.75" PointY="16.75" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΑΠΕΥΘΕΙΑΣ" Width="2.25" PointX="16.875" PointY="16.875" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΔΙΟΡΘΩΤΙΚΕΣ" Width="2.75" PointX="18.375" PointY="10.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΔΙΟΡΘΩΤΙΚΕΣ_ΑΝ" Width="2.75" PointX="7.625" PointY="17" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΣΥΜΠΛΗΡΩΜΑΤΙΚΕΣ" Width="2.75" PointX="5.875" PointY="10.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΣΥΜΠΛΗΡΩΜΑΤΙΚΕΣ_ΑΚ" Width="2.75" PointX="9.25" PointY="10.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΣΥΜΠΛΗΡΩΜΑΤΙΚΕΣ_ΑΝ" Width="3" PointX="3.875" PointY="16.875" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ" Width="2.875" PointX="15.125" PointY="10.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ_ΑΚ" Width="2.875" PointX="10.875" PointY="17" />
+        <EntityTypeShape EntityType="IrisDBModel.regΑΝΑΘΕΣΕΙΣ_ΠΡΟΣΛΗΨΗ" Width="2.625" PointX="26" PointY="16.25" />
+        <EntityTypeShape EntityType="IrisDBModel.regΑΝΑΘΕΣΕΙΣ_ΠΡΟΣΛΗΨΗ_ΑΝ" Width="2.75" PointX="23" PointY="16.25" />
+        <EntityTypeShape EntityType="IrisDBModel.regΑΝΑΘΕΣΕΙΣ_ΜΕΤΑΒΟΛΗ" Width="2.5" PointX="29.375" PointY="16.25" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΑΡΧΙΚΕΣ" Width="2.5" PointX="14.125" PointY="16.875" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΑΡΧΙΚΕΣ_ΑΝ" Width="2.375" PointX="19.5" PointY="16.875" />
+        <EntityTypeShape EntityType="IrisDBModel.regΑΝΑΘΕΣΕΙΣ_ΜΕΤΑΒΟΛΗ_ΑΝ" Width="2.375" PointX="32.375" PointY="16.25" />
+        <AssociationConnector Association="IrisDBModel.FK_ΣΥΣ_ΣΧΟΛΕΣ_ΣΥΣ_ΠΕΡΙΦΕΡΕΙΑΚΕΣ" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΕΝΤΥΠΑ" Width="2" PointX="28" PointY="11.75" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΚΑΘΟΛΙΚΟ" Width="2.625" PointX="30.25" PointY="0.5" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ_ΑΝ" Width="2.625" PointX="0.875" PointY="23.75" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΝΑΘΕΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ_ΑΝ_ΑΚ" Width="3" PointX="4" PointY="23.75" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ_ΑΝ" Width="2.75" PointX="7.625" PointY="23.75" />
+        <EntityTypeShape EntityType="IrisDBModel.ΑΠΟΦΑΣΕΙΣ_ΤΡΟΠΟΠΟΙΗΤΙΚΕΣ_ΑΝ_ΑΚ" Width="3" PointX="10.875" PointY="23.75" />
+        <EntityTypeShape EntityType="IrisDBModel.SYS_ANATHESI_TYPES" Width="1.875" PointX="14.5" PointY="5.625" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΕΙΔΙΚΟΤΗΤΕΣ_ΠΑΛΙΕΣ" Width="2.25" PointX="30.25" PointY="11.75" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΚΛΑΔΟΙ_ΕΝΙΑΙΟΙ" Width="1.875" PointX="20" PointY="26" />
+        <EntityTypeShape EntityType="IrisDBModel.ΣΥΣ_ΕΙΔΙΚΟΤΗΤΕΣ" Width="2" PointX="17.125" PointY="23.75" />
+        <EntityTypeShape EntityType="IrisDBModel.sqlEIDIKOTITES" Width="2" PointX="32.75" PointY="11.75" />
+        <AssociationConnector Association="IrisDBModel.FK_ΣΥΣ_ΕΙΔΙΚΟΤΗΤΕΣ_ΣΥΣ_ΚΛΑΔΟΙ" />
+        <AssociationConnector Association="IrisDBModel.FK_ΣΥΣ_ΕΙΔΙΚΟΤΗΤΕΣ_ΣΥΣ_ΚΛΑΔΟΙ_ΕΝΙΑΙΟΙ" />
+        <EntityTypeShape EntityType="IrisDBModel.sqlEIDIKOTITES_OLDNEW" Width="2" PointX="32.75" PointY="13.875" />
+        <EntityTypeShape EntityType="IrisDBModel.USER_ARIADNE" Width="1.875" PointX="14.375" PointY="23.75" />
+        <AssociationConnector Association="IrisDBModel.FK_ΣΥΣ_ΣΧΟΛΕΣ_SYS_PERIFERIES" />
+        <EntityTypeShape EntityType="IrisDBModel.APP_STATUS" Width="1.5" PointX="1" PointY="28.5" />
+        <EntityTypeShape EntityType="IrisDBModel.SYS_LOGINS" Width="1.875" PointX="2.75" PointY="28.5" />
+        <EntityTypeShape EntityType="IrisDBModel.sqlSCHOOL_LOGINS" Width="2" PointX="5" PointY="28.5" />
+        <EntityTypeShape EntityType="IrisDBModel.UPLOADS" Width="2.125" PointX="14.25" PointY="27.625" />
+        <EntityTypeShape EntityType="IrisDBModel.UPLOADS_FILES" Width="2.25" PointX="16.875" PointY="27.625" />
+        <AssociationConnector Association="IrisDBModel.FK_UPLOADS_FILES_UPLOADS" />
+        <EntityTypeShape EntityType="IrisDBModel.SYS_APOFASEIS_ALL" Width="2.125" PointX="23" PointY="23.875" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ2_ΑΝΤΙΠΡΟΕΔΡΟΙ" Width="1.875" PointX="25.75" PointY="24" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ2_ΔΙΑΧΕΙΡΙΣΤΕΣ" Width="1.75" PointX="29.875" PointY="24" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ2_ΔΙΕΥΘΥΝΤΕΣ" Width="1.875" PointX="25.75" PointY="26.375" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ2_ΔΙΕΥΘΥΝΤΕΣ_ΓΕΝΙΚΟΙ" Width="2" PointX="28" PointY="26.375" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ2_ΔΙΟΙΚΗΤΕΣ" Width="1.5" PointX="28" PointY="24" />
+        <EntityTypeShape EntityType="IrisDBModel.Δ2_ΠΡΟΙΣΤΑΜΕΝΟΙ" Width="1.75" PointX="32" PointY="24" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Iris.Models.SchoolsGridViewModel>
+@using Iris.DAL;
+@using Iris.Models;
+
+
+@{
+    ViewBag.Title = "Σχολεία";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*<style>
+    .k-grid .k-alt {
+        background-color: #e9e9e9; /* specify the alternate background-color */
+    }
+</style>*@
+
+    @Html.AntiForgeryToken()
+    <div class="page-header" style="margin:5px 30px 5px 30px">
+        <span style="margin:5px 30px 5px 0px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+            <font style="color:#494949;font-family:'Segoe UI'">Σχολές (ΕΠΑΣ, ΠΕΠΑΣ)</font>
+        </span>
+        <span style="margin:5px 10px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+        <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+        <span style="margin:5px 5px 5px 10px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Κατάλογος (α-ω)", "SchoolData2Print", "Tools", null, new { @class = "btn btn-primary", style = "font-size:14px", target = "_blank" })</span>
+        <span style="margin:5px 5px 5px 10px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Κατάλογος (1)", "SchoolDataPrint", "Tools", null, new { @class = "btn btn-primary", style = "font-size:14px", target = "_blank" })</span>
+    </div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px">
+        @(Html.Kendo().Grid(Model)
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(m => m.ΕΠΩΝΥΜΙΑ).Width(30)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.ForeignKey(m => m.ΔΟΜΗ, (IEnumerable<ΣΥΣ_ΕΚΠΑΙΔΕΥΤΙΚΕΣ_ΔΟΜΕΣ>)ViewData["schoolDomes"], "ΚΩΔΙΚΟΣ", "ΜΟΝΑΔΑ").Width(20);
+            columns.ForeignKey(m => m.ΠΕΡΙΦΕΡΕΙΑΚΗ, (IEnumerable<ΣΥΣ_ΠΕΡΙΦΕΡΕΙΑΚΕΣ>)ViewData["periferiakes"], "ΚΩΔΙΚΟΣ_ΠΕΡΙΦΕΡΕΙΑ", "ΕΠΩΝΥΜΙΑ_ΠΕΡΙΦΕΡΕΙΑ").Width(50);
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(34);
+            columns.Template(
+                @<text></text>)
+            .ClientTemplate(
+            "<a class=\"k-button k-button-icontext\" href='" + Url.Action("SchoolEdit", "Tools") + "?schoolId=#=ΣΧΟΛΗ_ΚΩΔ#' target = _blank><span class=\"k-icon k-edit\"></span>Καρτέλα</a>"
+            ).Width(16);
+        })
+        .ToolBar(toolBar =>
+        {
+            toolBar.Create();
+        })
+        .Editable(editable => editable.Mode(GridEditMode.InLine))
+        .HtmlAttributes(new { style="font-size:12px" })
+        .Navigatable()
+        .Filterable()
+        .Groupable()
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Scrollable(scr => scr.Height(380))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+        .DataSource(datasource => datasource
+        .Ajax()
+        .Batch(false)
+        .PageSize(40)
+        .ServerOperation(false)
+        .Model(model =>
+        {
+            model.Id(p => p.ΣΧΟΛΗ_ΚΩΔ);
+            model.Field(p => p.ΔΟΜΗ).DefaultValue(1);
+            model.Field(p => p.ΠΕΡΙΦΕΡΕΙΑΚΗ).DefaultValue(1);
+        })
+        .Create(create => create.Action("School_Create", "Tools"))
+        .Read(read => read.Action("School_Read", "Tools"))
+        .Update(update => update.Action("School_Update", "Tools"))
+        .Destroy(destroy => destroy.Action("School_Destroy", "Tools"))
+        .Events(events => events.Error("error_handler"))            
+        .Aggregates(a =>
+            {
+                a.Add(p => p.ΕΠΩΝΥΜΙΑ).Count();
+            })
+
+        ) @* datasource*@
+        )
+    </div>
+
+<script type="text/javascript">
+
+    function RefreshGrid(e) {
+        var grid = $("#Grid").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+</script>

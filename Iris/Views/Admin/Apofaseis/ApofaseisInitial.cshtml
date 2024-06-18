@@ -1,0 +1,375 @@
+﻿@using Iris.DAL;
+@using Iris.Models;
+@{
+    ViewBag.Title = "Αποφάσεις αρχικές";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int EPAS = 1;
+}
+
+<style>
+    .k-grid {
+        font-size: 12px;
+    }
+</style>
+
+@Html.AntiForgeryToken()
+    <div class="page-header" style="margin:5px 30px 5px 30px">
+        <span style="margin:5px 30px 5px 30px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+            <font style="color:#494949;float:left;font-family:'Segoe UI'">Αρχικές αποφάσεις ωρομισθίων</font>
+        </span>
+        <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+        <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+    </div>
+
+<div class="body-content" style="margin:10px 30px 5px 30px;background-color:dimgray;padding:2px;min-height:38px">
+    <span style="margin:2px;float:right;font-family:'Segoe UI';">
+        <input style="font-family:'Segoe UI';font-size:13px" type="button" onclick="cancelAnatheseis()" value="Ακύρωση επισύναψης" class="btn btn-default" />
+    </span>
+    <span style="margin:2px;float:right;font-family:'Segoe UI';">
+        <input style="font-family:'Segoe UI';font-size:13px" type="button" onclick="attachAnatheseis()" value="Επισύναψη αναθέσεων" class="btn btn-default" />
+    </span>
+    <span style="margin:2px;float:left;font-family:'Segoe UI';">
+        <label style="font-size:13px;font-weight:bold;color:white">Σχολικό έτος : </label>
+        @(Html.Kendo().DropDownList()
+            .Name("ddlSchoolYear")
+            .DataTextField("ΣΧΟΛΙΚΟ_ΕΤΟΣ")
+            .DataValueField("SCHOOLYEAR_ID")
+            .HtmlAttributes(new { style = "width:160px;font-size:13px;font-weight:bold" })
+            .OptionLabel("Επιλογή...")
+            .AutoBind(true)
+            .Enable(true)
+            .DataSource(source => { source.Read(read => { read.Action("GetSchoolYears", "Apofaseis"); }).ServerFiltering(true); })
+            .Events(e =>
+            {
+                e.Select("ddlselect");
+            })
+        )
+    </span>
+    <span style="margin:2px;margin-left:8px;float:left;font-family:'Segoe UI';">
+        <label style="font-size:13px;font-weight:bold;color:white">Διαχειριστής : </label>
+        @(Html.Kendo().DropDownList()
+            .Name("ddlAdmins")
+            .DataTextField("ΟΝΟΜΑΤΕΠΩΝΥΜΟ_ΠΛΗΡΕΣ")
+            .DataValueField("ΔΙΑΧΕΙΡΙΣΤΗΣ_ΚΩΔ")
+            .HtmlAttributes(new { style = "width:260px;font-size:13px;font-weight:bold" })
+            .OptionLabel("Επιλογή...")
+            .AutoBind(true)
+            .Enable(true)
+            .DataSource(source =>
+            { source.Read(read => { read.Action("GetDiaxiristes2", "Apofaseis", new { departement = EPAS }); }).ServerFiltering(true); })
+            .Events(e =>
+            {
+                e.Select("ddl2select");
+            })
+        )
+    </span>
+</div>
+
+
+    <div class="body-content" style="margin:10px 30px 5px 30px;font-size:small">
+        @(Html.Kendo().Grid<ApofasiInitialGridViewModel>()
+        .Name("Master")
+        .AutoBind(true)
+        .HtmlAttributes(new { style = "display: block;font-size:13px" })
+        .Navigatable()
+        .Filterable()
+        .Groupable()
+        .Selectable()
+        .Editable(editable => editable.Mode(GridEditMode.InLine).CreateAt(GridInsertRowPosition.Top))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        .Scrollable(scr => scr.Height(230))
+        .Columns(columns =>
+        {
+            columns.ForeignKey(f => f.ΣΧΟΛΙΚΟ_ΕΤΟΣ, (IEnumerable<ΣΥΣ_ΣΧΟΛΙΚΑ_ΕΤΗ>)ViewData["schoolYears"], "SCHOOLYEAR_ID", "ΣΧΟΛΙΚΟ_ΕΤΟΣ").Width(18);
+            columns.ForeignKey(f => f.ΔΙΑΧΕΙΡΙΣΤΗΣ, (IEnumerable<Δ_ΔΙΑΧΕΙΡΙΣΤΕΣ>)ViewData["diaxiristes"], "ΔΙΑΧΕΙΡΙΣΤΗΣ_ΚΩΔ", "ΟΝΟΜΑΤΕΠΩΝΥΜΟ_ΠΛΗΡΕΣ").Width(30)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.Bound(c => c.ΗΜΝΙΑ_ΣΥΝΤΑΞΗ).Width(22);
+            columns.ForeignKey(f => f.ΣΧΟΛΗ, (IEnumerable<ΣΥΣ_ΣΧΟΛΕΣ>)ViewData["schools"], "ΣΧΟΛΗ_ΚΩΔ", "ΕΠΩΝΥΜΙΑ").Width(30);
+            columns.ForeignKey(f => f.ΕΓΓΡΑΦΟ_ΕΙΔΟΣ, (IEnumerable<ΣΥΣ_ΕΓΓΡΑΦΟ_ΕΙΔΟΣ>)ViewData["doctypes"], "ΚΩΔΙΚΟΣ", "ΕΓΓΡΑΦΟ_ΕΙΔΟΣ").Width(20);
+            columns.Bound(c => c.ΑΠΟΦΑΣΗ_ΚΩΔ).Hidden();
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(38);
+            columns.Template(
+                @<text></text>)
+            .ClientTemplate(
+            "<a class=\"k-button k-button-icontext\" href='" + Url.Action("ApofasiInitialEdit", "Apofaseis") + "?apofasiId=#=ΑΠΟΦΑΣΗ_ΚΩΔ#' target = _blank><span class=\"k-icon k-edit\"></span>Καρτέλα</a>"
+            ).Width(18);
+        })
+        .ToolBar(toolBar =>
+        {
+            toolBar.Create();
+        })
+        .DataSource(ds => ds
+            .Ajax()
+            .Batch(false)
+            .PageSize(60)
+            .ServerOperation(false)
+            .Model(model =>
+            {
+                model.Id(p => p.ΑΠΟΦΑΣΗ_ΚΩΔ);
+                model.Field(p => p.ΣΧΟΛΙΚΟ_ΕΤΟΣ).DefaultValue((int)ViewData["defaultSchoolYear"]);
+                model.Field(p => p.ΔΙΑΧΕΙΡΙΣΤΗΣ).DefaultValue(ViewData["defaultDiaxiristis"]);
+                model.Field(p => p.ΣΧΟΛΗ).DefaultValue((int)ViewData["defaultSchool"]);
+                model.Field(p => p.ΕΓΓΡΑΦΟ_ΕΙΔΟΣ).DefaultValue(1);
+            })
+            .Create(create => create.Action("ApofasiInitial_Create", "Apofaseis"))
+            .Read(read => read.Action("ApofasiInitial_Read", "Apofaseis").Data("data1"))
+            .Update(update => update.Action("ApofasiInitial_Update", "Apofaseis"))
+            .Destroy(delete => delete.Action("ApofasiInitial_Destroy", "Apofaseis"))
+            .Events(events => events.Error("error_handler"))
+            .Aggregates(a => { a.Add(p => p.ΔΙΑΧΕΙΡΙΣΤΗΣ).Count(); })
+        )
+        .Events(events => events.Change("change"))
+        )
+
+    </div>
+
+
+    <div class="body-content" style="margin:10px 30px 5px 30px;font-size:small">
+
+        @(Html.Kendo().Grid<AnathesiInitialViewModel>()
+        .Name("Child")
+        .AutoBind(false)
+        .HtmlAttributes(new { style = "display: block;font-size:12px" })
+        .Navigatable()
+        .Filterable()
+        .Editable(editable => editable.Mode(GridEditMode.InLine).CreateAt(GridInsertRowPosition.Top))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        .Scrollable(scr => scr.Height(280))
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.ΑΦΜ).Width(14).Groupable(false).Filterable(false);
+            columns.Bound(c => c.ΕΠΩΝΥΜΟ).Width(26).Groupable(false)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.Bound(c => c.ΟΝΟΜΑ).Width(22).Groupable(false);
+            columns.Bound(c => c.ΠΑΤΡΩΝΥΜΟ).Width(20).Groupable(false);
+            columns.ForeignKey(f => f.ΕΙΔΙΚΟΤΗΤΑ_ΚΩΔ, (IEnumerable<sqlEIDIKOTITES>)ViewData["eidikotites"], "ΚΩΔΙΚΟΣ", "ΕΙΔΙΚΟΤΗΤΑ").Width(42);
+            columns.Bound(c => c.ΩΡΕΣ_ΕΒΔ).Width(7).Groupable(false).Filterable(false).Title("Ωρες");
+            columns.Bound(c => c.ΑΠΟΦΑΣΗ_ΚΩΔ).Width(10).Groupable(false).Filterable(false).Title("Απόφ.");
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(34);
+            columns.Bound(c => c.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ).Width(10).Hidden();
+        })
+        .DataSource(ds => ds
+        .Ajax()
+        .PageSize(40)
+        .ServerOperation(false)
+        .Model(model =>
+        {
+            model.Id(p => p.ΑΝΑΘΕΣΗ_ΚΩΔ);
+            model.Field(p => p.ΕΙΔΙΚΟΤΗΤΑ_ΚΩΔ).DefaultValue(ViewData["defaultEidikotita"]);
+        })
+        .Read(read => read.Action("AnatheseisInitial_Read", "Apofaseis").Data("data"))
+        .Update(update => update.Action("AnatheseisInitial_Update", "Apofaseis").Data("data"))
+        .Destroy(delete => delete.Action("AnatheseisInitial_Destroy", "Apofaseis"))                
+        .Aggregates(a => { a.Add(p => p.ΕΠΩΝΥΜΟ).Count(); })
+        )
+        )
+
+    </div>
+
+<script type="text/javascript">
+
+    function attachAnatheseis() {
+
+        var masterGrid = $("#Master").data("kendoGrid");
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+        var parameters = {
+            apofasiId: 0,
+            schoolyearId: 0,
+            schoolId: 0,
+            apofasiType: ""
+        };
+        if (dataItem) {
+            var apofasiID = dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = dataItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = dataItem.ΣΧΟΛΗ;
+            var apofasiType = dataItem.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ;
+            parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                apofasiType: apofasiType
+            };
+            $.ajax({
+                url: '@Url.Action("ApofasiInitialAttach", "Apofaseis")',
+                type: 'POST',
+                data: JSON.stringify(parameters),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data != "") MessageBoxAlert(data);
+                    $("#Child").data("kendoGrid").dataSource.read({ ap: parameters });
+                    $("#Child").css("display", "block");
+                },
+                error: function () {
+                    MessageBoxAlert("Προέκυψε σφάλμα. Δοκιμάστε πάλι αργότερα.");
+                }
+            });
+        }
+        else {
+            MessageBoxAlert("Για να γίνει η επισύναψη πρέπει πρώτα να επιλέξετε μια απόφαση.");
+        }
+    }
+
+    function cancelAnatheseis() {
+
+        var masterGrid = $("#Master").data("kendoGrid");
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+        var parameters = {
+            apofasiId: 0,
+            schoolyearId: 0,
+            schoolId: 0,
+            apofasiType: ""
+        };
+        if (dataItem) {
+            var apofasiID = dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = dataItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = dataItem.ΣΧΟΛΗ;
+            var apofasiType = dataItem.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ;
+            parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                apofasiType: apofasiType
+            };
+            $.ajax({
+                url: '@Url.Action("ApofasiInitialAttachCancel", "Apofaseis")',
+                type: 'POST',
+                data: JSON.stringify(parameters),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data != "") MessageBoxAlert(data);
+                    $("#Child").data("kendoGrid").dataSource.read({ ap: parameters });
+                    $("#Child").css("display", "block");
+                },
+                error: function () {
+                    MessageBoxAlert("Προέκυψε σφάλμα. Δοκιμάστε πάλι αργότερα.");
+                }
+            });
+        }
+        else {
+            MessageBoxAlert("Για να ακυρωθεί η επισύναψη πρέπει πρώτα να επιλέξετε μια απόφαση.");
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    function data1() {
+
+        var adminID = $("#ddlAdmins").data("kendoDropDownList").value();
+        var syearID = $("#ddlSchoolYear").data("kendoDropDownList").value();
+
+        if (adminID && syearID) {
+            return { schoolyearId: syearID, adminId: adminID }
+        }
+        else {
+            return { schoolyearId: 0, adminId: 0 }
+        }
+    }
+
+    function ddlselect(e) {
+        var dataItem = this.dataItem(e.item.index());
+        var adminID = $("#ddlAdmins").data("kendoDropDownList").value();
+        if (dataItem && adminID) {
+            var syearID = dataItem.SCHOOLYEAR_ID;
+            $("#Master").data("kendoGrid").dataSource.read({ schoolyearId: syearID, adminId: adminID });
+            $("#Master").css("display", "block");
+        }
+        else {
+            $("#Master").data("kendoGrid").dataSource.read({ schoolyearId: 0, adminId: 0 });
+            $("#Master").css("display", "block");
+        }
+    };
+
+    function ddl2select(e) {
+        var dataItem = this.dataItem(e.item.index());
+        var syearID = $("#ddlSchoolYear").data("kendoDropDownList").value();
+        if (dataItem && syearID) {
+            var adminID = dataItem.ΔΙΑΧΕΙΡΙΣΤΗΣ_ΚΩΔ;
+            $("#Master").data("kendoGrid").dataSource.read({ schoolyearId: syearID, adminId: adminID });
+            $("#Master").css("display", "block");
+        }
+        else {
+            $("#Master").data("kendoGrid").dataSource.read({ schoolyearId: 0, adminId: 0 });
+            $("#Master").css("display", "block");
+        }
+    };
+</script>
+
+<script type="text/javascript">
+
+    function data() {
+        var masterGrid = $("#Master").data("kendoGrid");
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+
+        if (dataItem) {
+            var apofasiID = dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = dataItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = dataItem.ΣΧΟΛΗ;
+            var apofasiType = dataItem.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ;
+
+            var parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                apofasiType: apofasiType,
+            };
+        }
+        else {
+            var parameters = {
+                apofasiId: 0,
+                schoolyearId: 0,
+                schoolId: 0,
+                apofasiType: ""
+            };
+        }
+        return parameters;
+    }
+
+    function RefreshGrid(e) {
+        var grid = $("#Master").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+    function change(e) {
+
+        var masterGrid = $("#Master").data("kendoGrid");
+        var dataItem = masterGrid.dataItem(masterGrid.select());
+        if (dataItem) {
+            var apofasiID = dataItem.ΑΠΟΦΑΣΗ_ΚΩΔ;
+            var schoolyearID = dataItem.ΣΧΟΛΙΚΟ_ΕΤΟΣ;
+            var schoolID = dataItem.ΣΧΟΛΗ;
+            var apofasiType = dataItem.ΑΠΟΦΑΣΗ_ΕΙΔΟΣ;
+
+            var parameters = {
+                apofasiId: apofasiID,
+                schoolyearId: schoolyearID,
+                schoolId: schoolID,
+                apofasiType: apofasiType,
+            };
+        }
+        else {
+            var parameters = {
+                apofasiId: 0,
+                schoolyearId: 0,
+                schoolId: 0,
+                apofasiType: ""
+            };
+        }
+        //MessageBoxAlert("parameters: " + parameters.apofasiId + "," + parameters.schoolyearId);
+        $("#Child").data("kendoGrid").dataSource.read({ ap: parameters });
+        $("#Child").css("display", "block");
+    }
+
+</script>
+

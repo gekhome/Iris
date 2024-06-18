@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Iris.Models.SysPeriferiakiViewModel>
+
+@{
+    ViewBag.Title = "Περιφερειακές";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+
+    .k-grid {
+        font-size: 12px;
+    }
+
+</style>
+
+    @Html.AntiForgeryToken()
+    <div class="page-header" style="margin:5px 20px 5px 20px">
+        <span style="margin:5px 20px 5px 0px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+            <font style="color:#494949;font-family:'Segoe UI'">Περιφερειακές Διευθύνσεις</font>
+        </span>
+        <span style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "Admin", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+        <button class="btn btn-info" style="margin:5px 5px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px" onclick="RefreshGrid()">Ανανέωση</button>
+    </div>
+
+    <div class="body-content" style="margin:10px 20px 5px 20px">
+
+        @(Html.Kendo().Grid(Model)
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(m => m.ΕΠΩΝΥΜΙΑ_ΠΕΡΙΦΕΡΕΙΑ).FooterTemplate(@<text>Σύνολο Πλήθος: @item.Count</text>).Width(50);
+            columns.Bound(m => m.ΤΑΧ_ΔΙΕΥΘΥΝΣΗ).Width(40);
+            columns.Bound(m => m.EMAIL).Width(22);            
+            columns.Bound(m => m.ΤΗΛΕΦΩΝΑ).Width(14).Filterable(false);
+            columns.Bound(m => m.FAX).Width(14).Filterable(false);
+            columns.Command(command => { command.Edit(); command.Destroy(); }).Width(34);            
+        })
+        .ToolBar(toolBar =>
+        {
+            toolBar.Create();
+        })
+        .Editable(editable => editable.Mode(GridEditMode.InLine))
+        .Navigatable()
+        .Filterable()
+        .Resizable(resize => resize.Columns(true))
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Scrollable(scr => scr.Height(300))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+        .DataSource(datasource => datasource
+        .Ajax()
+        .Batch(false)
+        .PageSize(20)
+        .ServerOperation(false)
+        .Model(model =>
+        {
+            model.Id(p => p.ΚΩΔΙΚΟΣ_ΠΕΡΙΦΕΡΕΙΑ);
+        })
+        .Create(create => create.Action("Periferiaki_Create", "Tools"))
+        .Read(read => read.Action("Periferiaki_Read", "Tools"))
+        .Update(update => update.Action("Periferiaki_Update", "Tools"))
+        .Destroy(destroy => destroy.Action("Periferiaki_Destroy", "Tools"))
+        .Events(events => events.Error("error_handler"))
+        .Aggregates(a =>
+            {
+                a.Add(p => p.ΕΠΩΝΥΜΙΑ_ΠΕΡΙΦΕΡΕΙΑ).Count();
+            })
+
+        ) @* datasource*@
+        )
+
+    </div>
+
+<script type="text/javascript">
+
+    function RefreshGrid(e) {
+        var grid = $("#Grid").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+</script>

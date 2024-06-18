@@ -1,0 +1,18 @@
+﻿@using System.Collections
+@using Iris.Models
+@using Iris.DAL
+@model object
+
+@(Html.Kendo().DropDownListFor(m => m)
+    .AutoBind(true)
+    .DataValueField("ID")
+    .DataTextField("TERMS_TEXT")
+    .OptionLabel("Επιλογή...")
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Action("TermGroupsRead", "Admin2");
+        });
+    })
+)

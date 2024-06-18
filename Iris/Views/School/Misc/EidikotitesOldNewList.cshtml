@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Iris.Models.SysEidikotitesOldNewViewModel>
+@using Iris.DAL;
+@using Iris.Models;
+
+
+@{
+    ViewBag.Title = "Ειδικότητες παλιές-νέες";
+    Layout = "~/Views/Shared/_SchoolLayout.cshtml";
+}
+
+@*<style>
+    .k-grid .k-alt {
+        background-color: #e9e9e9; /* specify the alternate background-color */
+    }
+</style>*@
+<style>
+    .k-grid {
+        font-size: 11px;
+    }
+</style>
+
+
+    @Html.AntiForgeryToken()
+    <div class="page-header" style="margin:5px 30px 5px 30px">
+        <span style="margin:5px 30px 5px 30px;font-family:'Segoe UI';font-size:large;text-shadow:1px 1px #000000">
+            <font style="color:#494949;float:left;font-family:'Segoe UI'">Συσχέτιση παλαιών-νέων ειδικοτήτων εκπαιδευτικών</font>
+        </span>
+        <span style="margin:5px 10px 5px 5px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Επιστροφή", "Index", "School", null, new { @class = "btn btn-warning", style = "font-size:14px" })</span>
+        <span style="margin:5px 5px 5px 10px;float:right;font-family:'Segoe UI';font-size:14px">@Html.ActionLink("Εκτύπωση", "EidikotitesOldNewPrint", "School", null, new { @class = "btn btn-primary", style = "font-size:14px", target = "_blank" })</span>
+    </div>
+
+    <div class="body-content" style="margin:10px 30px 5px 30px">
+        @(Html.Kendo().Grid(Model)
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(m => m.ΕΙΔΙΚΟΤΗΤΑ_ΠΑΛΙΑ).Width(50)
+                .ClientFooterTemplate("Συνολικό πλήθος: #=count#")
+                .ClientGroupFooterTemplate("Πλήθος: #=count#");
+            columns.Bound(m => m.ΕΙΔΙΚΟΤΗΤΑ_ΝΕΑ).Width(50);
+            columns.Bound(m => m.ΚΛΑΔΟΣ_ΕΝΙΑΙΟΣ).Width(40);            
+        })
+        .HtmlAttributes(new { style = "font-size:12px" })
+        .Filterable()
+        .Groupable()
+        .Sortable(sortable => sortable.AllowUnsort(true).SortMode(GridSortMode.MultipleColumn))
+        .Scrollable(scr => scr.Height(400))
+        .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(10))
+        .DataSource(datasource => datasource
+            .Ajax()
+            .PageSize(60)
+            .ServerOperation(false)
+            .Model(model =>
+            {
+                model.Id(p => p.ΚΩΔΙΚΟΣ);
+            })
+            .Read(read => read.Action("EidikotitaOldNew_Read", "School"))
+            .Events(events => events.Error("error_handler"))                       
+            .Aggregates(a =>
+            {
+                a.Add(p => p.ΕΙΔΙΚΟΤΗΤΑ_ΠΑΛΙΑ).Count();
+            })
+        ) @* datasource*@
+        )
+    </div>
+
+<script type="text/javascript">
+
+    function RefreshGrid(e) {
+        var grid = $("#Grid").data("kendoGrid");
+        grid.dataSource.read();
+    }
+
+</script>
+
